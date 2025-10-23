@@ -1,5 +1,4 @@
 # Projecto-Programacion
-
 La empresa Bloomer requiere un sistema de automatización de sus datos, los cuales incluyen los siguientes módulos:
 
 1. Miembros y menú principal: Módulo que permite crear, eliminar y editar datos de los clientes, el cual posee los siguientes campos:
