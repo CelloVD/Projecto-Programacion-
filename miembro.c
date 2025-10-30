@@ -44,7 +44,7 @@ int crearMiembro(Miembro miembro[], int *total) {
     } while (1);
 
     do {
-        printf("RUT (ej: 12345678-9): ");
+        printf("RUT (ej: 12.345.678-9): ");
         fgets(buffer, sizeof(buffer), stdin);
         buffer[strcspn(buffer, "\n")] = 0;
         if (strlen(buffer) == 0) {
