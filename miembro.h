@@ -6,7 +6,7 @@
 typedef struct {
     char nombre[20];
     char apellido[20];
-    char rut[13];               // "12345678-9"
+    char rut[20];               // "12.345.678-9"
     char direccion[60];         
     int edad;
     char fechaNacimiento[11];   // "dd/mm/aaaa"
