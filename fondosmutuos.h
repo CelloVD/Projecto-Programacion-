@@ -30,7 +30,7 @@ void agregarFondosMutuos(void);
 void listarFondosMutuosPorRut(const char* rut);
 void editarFondosMutuos(void);
 void eliminarFondosMutuos(void);
-void eliminarFondosMutuossPorRut(const char* rut); // para eliminación en cascada
+void eliminarFondosMutuosPorRut(const char* rut); // para eliminación en cascada
 
 // Calcula la proyección de ahorros a N periodos usando interés compuesto
 double calcularProyeccionRecursiva(double capital, double tasa, int periodos);
