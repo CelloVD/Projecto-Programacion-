@@ -3,18 +3,32 @@
 #include <ctype.h> //Funciones para caracteres (toupper, etc.....)
 #include "miembro.h" //incluimos la cabecera para acceder a la struct y prototipos
 #include "validaciones.h"
+#include "constante.h"
 
+// Variables globales (accesibles desde otros módulos)
+Miembro miembros[MAX_REGISTROS];
+int totalMiembros = 0;
 
-int crearMiembro(Miembro miembro[], int *total) {
-    // Verificar límite de 100 miembros
-    if (*total >= MAX_REGISTROS) {
+// Función para verificar si un RUT ya existe (usada por otros módulos)
+int existeMiembro(const char* rut) {
+    for (int i = 0; i < totalMiembros; i++) {
+        if (strcmp(miembros[i].rut, rut) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+//Funcion para crear un nuevo miembro
+int crearMiembro() {
+
+    if (totalMiembros >= MAX_REGISTROS) {
         printf("Límite de 100 miembros alcanzado.\n");
         return 0;
     }
 
     Miembro nuevo;
-    char buffer[100]; // Buffer general para lectura segura
-
+    char buffer[100];
+    
     do {
         printf("Nombre (máx. 19 caracteres): ");
         fgets(buffer, sizeof(buffer), stdin);
@@ -51,6 +65,8 @@ int crearMiembro(Miembro miembro[], int *total) {
             printf("El RUT no puede estar vacío.\n");
         } else if (!validarRut(buffer)) {
             printf("RUT inválido (dígito verificador incorrecto).\n");
+        } else if (existeMiembro(buffer)) {
+            printf("Ya existe un miembro con ese RUT.\n");
         } else {
             strcpy(nuevo.rut, buffer);
             break;
@@ -76,7 +92,7 @@ int crearMiembro(Miembro miembro[], int *total) {
         fgets(buffer, sizeof(buffer), stdin);
         buffer[strcspn(buffer, "\n")] = 0;
         int edad;
-        if (sscanf(buffer, "%d", &edad) == 1 && edad >= 1 && edad <= 120) { //sscanf convierte de texto a un numero u otro tipo de dato
+        if (sscanf(buffer, "%d", &edad) == 1 && edad >= 1 && edad <= 120) {
             nuevo.edad = edad;
             break;
         }
@@ -139,62 +155,260 @@ int crearMiembro(Miembro miembro[], int *total) {
         }
     } while (1);
 
-    // === GUARDAR MIEMBRO ===
-    miembro[(*total)++] = nuevo;
+    miembros[totalMiembros++] = nuevo;
     printf("Miembro registrado con éxito.\n");
     return 1;
 }
 
-int menuMiembro(Miembro miembro[], int *total){
+//Funcion para mostrar la lista de los miembros 
+void listarMiembros() {
+    if (totalMiembros == 0) {
+        printf("No hay miembros registrados.\n");
+        return;
+    }
+
+    printf("\n------ LISTA DE MIEMBROS ------\n");
+    for (int i = 0; i < totalMiembros; i++) {
+        printf("\n[ID: %d]\n", i + 1);
+        printf("Nombre: %s %s\n", miembros[i].nombre, miembros[i].apellido);
+        printf("RUT: %s\n", miembros[i].rut);
+        printf("Dirección: %s\n", miembros[i].direccion);
+        printf("Edad: %d\n", miembros[i].edad);
+        printf("Fecha nac.: %s\n", miembros[i].fechaNacimiento);
+        printf("Sexo: %c\n", miembros[i].sexo);
+        printf("Casado: %s\n", miembros[i].casado ? "Sí" : "No");
+        printf("Email: %s\n", miembros[i].email);
+        printf("------------------------\n");
+    }
+}
+
+//Funcion para editar los datos de los miembros
+void editarMiembro() {
+    //Comprobacion de que si hay miembros ingresados 
+    if (totalMiembros == 0) {
+        printf("No hay miembros para editar.\n");
+        return;
+    }
+
+    //editar rut
+    char rut[13];
+    printf("Ingrese RUT del miembro a editar: ");
+    fgets(rut, sizeof(rut), stdin);
+    rut[strcspn(rut, "\n")] = 0;
+
+    if (!validarRut(rut)) {
+        printf("RUT inválido.\n");
+        return;
+    }
+
+    int idx = -1;
+    for (int i = 0; i < totalMiembros; i++) {
+        if (strcmp(miembros[i].rut, rut) == 0) {
+            idx = i;
+            break;
+        }
+    }
+
+    if (idx == -1) {
+        printf("No se encontró un miembro con ese RUT.\n");
+        return;
+    }
+
+    printf("Editando miembro: %s %s\n", miembros[idx].nombre, miembros[idx].apellido);
+    char buffer[100];
+
+    // Editar nombre
+    printf("Nuevo nombre (actual: %s): ", miembros[idx].nombre);
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = 0;
+    if (strlen(buffer) > 0 && strlen(buffer) < sizeof(miembros[idx].nombre)) {
+        strcpy(miembros[idx].nombre, buffer);
+    }
+
+    // Editar apellido
+    printf("Nuevo apellido (actual: %s): ", miembros[idx].apellido);
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = 0;
+    if (strlen(buffer) > 0 && strlen(buffer) < sizeof(miembros[idx].apellido)) {
+        strcpy(miembros[idx].apellido, buffer);
+    }
+
+    // Editar dirección
+    printf("Nueva dirección (actual: %s): ", miembros[idx].direccion);
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = 0;
+    if (strlen(buffer) > 0 && strlen(buffer) < sizeof(miembros[idx].direccion)) {
+        strcpy(miembros[idx].direccion, buffer);
+    }
+
+    // Editar edad
+    printf("Nueva edad (actual: %d): ", miembros[idx].edad);
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = 0;
+    if (strlen(buffer) > 0) {
+        int edad;
+        if (sscanf(buffer, "%d", &edad) == 1 && edad >= 1 && edad <= 120) {
+            miembros[idx].edad = edad;
+        } else {
+            printf("Edad inválida. No se actualizó.\n");
+        }
+    }
+
+    // Editar fecha de nacimiento
+    printf("Nueva fecha nac. (actual: %s): ", miembros[idx].fechaNacimiento);
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = 0;
+    if (strlen(buffer) > 0) {
+        if (validarFecha(buffer)) {
+            strcpy(miembros[idx].fechaNacimiento, buffer);
+        } else {
+            printf("Fecha inválida. No se actualizó.\n");
+        }
+    }
+
+    // Editar sexo
+    printf("Nuevo sexo (actual: %c): ", miembros[idx].sexo);
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = 0;
+    if (strlen(buffer) == 1) {
+        char s = toupper(buffer[0]);
+        if (s == 'M' || s == 'F') {
+            miembros[idx].sexo = s;
+        }
+    }
+
+    // Editar casado
+    printf("¿Casado? (1=Sí / 0=No, actual: %s): ", miembros[idx].casado ? "Sí" : "No");
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = 0;
+    if (strlen(buffer) > 0) {
+        int casado;
+        if (sscanf(buffer, "%d", &casado) == 1 && (casado == 0 || casado == 1)) {
+            miembros[idx].casado = casado;
+        }
+    }
+
+    // Editar email
+    printf("Nuevo email (actual: %s): ", miembros[idx].email);
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = 0;
+    if (strlen(buffer) > 0) {
+        if (strlen(buffer) < sizeof(miembros[idx].email) && validarEmail(buffer)) {
+            strcpy(miembros[idx].email, buffer);
+        } else {
+            printf("Email inválido o muy largo. No se actualizó.\n");
+        }
+    }
+
+    printf("Miembro actualizado.\n");
+}
+
+
+void eliminarMiembro() {
+
+    if (totalMiembros == 0) {
+        printf("No hay miembros para eliminar.\n");
+        return;
+    }
+
+    char rut[13];
+    printf("Ingrese RUT del miembro a eliminar: ");
+    fgets(rut, sizeof(rut), stdin);
+    rut[strcspn(rut, "\n")] = 0;
+
+    if (!validarRut(rut)) {
+        printf("RUT inválido.\n");
+        return;
+    }
+
+    int idx = -1;
+    for (int i = 0; i < totalMiembros; i++) {
+        if (strcmp(miembros[i].rut, rut) == 0) {
+            idx = i;
+            break;
+        }
+    }
+
+    if (idx == -1) {
+        printf("No se encontró un miembro con ese RUT.\n");
+        return;
+    }
+
+    printf("¿Eliminar a %s %s y todos sus datos asociados? (s/n): ",
+           miembros[idx].nombre, miembros[idx].apellido);
+    char confirm;
+    scanf("%c", &confirm);
+    limpiar_buffer();
+
+    if (confirm == 's' || confirm == 'S') {
+        //ELIMINACIÓN EN CASCADA
+        eliminarFinanzasPorRut(rut);
+        eliminarPropiedadesPorRut(rut);
+        eliminarVehiculosPorRut(rut);
+        eliminarTerrenosPorRut(rut);
+        eliminarFondosMutuosPorRut(rut);
+        eliminarAgendaPorRut(rut);
+        eliminarBeneficiosPorRut(rut);
+
+        // Ahora eliminar al miembro
+        for (int i = idx; i < totalMiembros - 1; i++) {
+            miembros[i] = miembros[i + 1];
+        }
+        totalMiembros--;
+
+        printf("Miembro y todos sus datos asociados eliminados.\n");
+    } else {
+        printf("Eliminación cancelada.\n");
+    }
+}
+
+int menuMiembro() {
     int opcion, c;
-    do{
+    do {
         printf("\n------ Módulo Miembros -----\n");
-        printf("1. Crear Clientes\n");
-        printf("2. Editar Clientes\n");
-        printf("3. Eliminar Clientes\n");
-        printf("4. Listar Clientes\n");
+        printf("1. Crear Miembro\n");
+        printf("2. Editar Miembro\n");
+        printf("3. Eliminar Miembro\n");
+        printf("4. Listar Miembros\n");
         printf("5. Volver al menú principal\n");
         printf("------------------------------\n");
         printf("Seleccione una opcion: ");
-        //Valida opción
-        if (scanf("%d", &opcion) != 1) {    //Si no es número
+        
+        if (scanf("%d", &opcion) != 1) {
             limpiar_buffer();
             opcion = -1;
-
         } else {
-            c = getchar(); //Lee siguiente caracter
-
-            if (c != '\n' && c != EOF) {    //Si hay caracter(es) sobrantes
+            c = getchar();
+            if (c != '\n' && c != EOF) {
                 limpiar_buffer();
                 opcion = -1;
-
-            } else if (opcion < 0 || opcion > 8) { //Si está fuera del rango
+            } else if (opcion < 1 || opcion > 5) {
                 opcion = -1;
             }
         }
 
-        //Discriminar op
-        switch (opcion){
-        case 1:
-            crearMiembro(miembro, total);
-            break;
-        case 2:
-            /* code */
-            break;
-        case 3:
-            /* code */
-            break;
-        case 4:
-            /* code */
-            break;
-        case 5:
-            return 0;
-            break;
-        
-        default:
-            printf("Opción inválida. \n");
-            break;
+        limpiar_buffer(); // Asegurar buffer limpio antes de fgets
+
+        switch (opcion) {
+            case 1: 
+                crearMiembro(); 
+                break;
+            case 2: 
+                editarMiembro(); 
+                break;
+            case 3: 
+                eliminarMiembro(); 
+                break;
+            case 4: 
+                listarMiembros(); 
+                break;
+            case 5: 
+                return 0;
+            default: 
+                printf("Opción inválida.\n"); 
+                break;
         }
-    }while (opcion != 5);
+
+    } while (opcion != 5);
     return 0;
 }
