@@ -1,14 +1,13 @@
-#include <bloomer.h>
-
-Miembro miembro[MAX_REGISTROS]; 
-int totalMiembro = 0;  
+#include "bloomer.h"
 
 //Funcion para entrar a nuestro menu principal del la empresa Bloomer.
 void menuPrincipal(){
+
     int opcion, c;
+    
     do{
         printf("\n------Sistema Bloomer------\n");
-        printf("1. Miembros y menú principal\n");
+        printf("1. Miembros\n");
         printf("2. Finanzas\n");
         printf("3. Propiedades\n");
         printf("4. Vehículos\n");
@@ -41,12 +40,12 @@ void menuPrincipal(){
         switch (opcion){
 
         case 1:
-            menuMiembro(miembro, &totalMiembro);
+            menuMiembro();
             printf("Miembros y menu principal:");
             break;
 
         case 2:
-            /* code */
+            menuFinanzas();
             printf("Finanzas \n");
             break;
 
@@ -90,6 +89,8 @@ void menuPrincipal(){
         }
     }while(opcion != 0);
 }
+
 int main(){
     menuPrincipal();
+    return 0;
 }
