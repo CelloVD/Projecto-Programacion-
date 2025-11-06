@@ -76,7 +76,6 @@ void menuFinanzas(void) {
     } while (opcion != 5);
 }
 
-// ------------------------------------------------------------
 void agregarFinanzas(void) {
     if (totalFinanzas >= MAX_REGISTROS) {
         printf("No se pueden registrar más finanzas (máx. %d).\n", MAX_REGISTROS);
