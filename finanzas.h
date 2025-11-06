@@ -3,6 +3,8 @@
 
 #include "constante.h"
 
+#define MAX_RUT          13   // Formato: "12.345.678-9"
+
 typedef struct {
     char numeroCuenta[20];
     char banco[50];
@@ -10,14 +12,14 @@ typedef struct {
     double ingresos;
     double egresos;
     double saldoActual;
-    char rutAsociado[13];
+    char rutAsociado[MAX_RUT];
 } Finanzas;
 
 extern Finanzas finanzas[MAX_REGISTROS];
 extern int totalFinanzas;
 
 void eliminarFinanzasPorRut(const char* rut);
-void menuFinanzas(void);
+int menuFinanzas(void);
 void agregarFinanzas(void);
 void listarFinanzasPorRut(const char* rut);
 void editarFinanzas(void);
