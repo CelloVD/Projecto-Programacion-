@@ -32,10 +32,10 @@ void eliminarFinanzasPorRut(const char* rut) {
 }
 
 //Menú interactivo del módulo finanzas 
-void menuFinanzas(void) {
+int menuFinanzas() {
     int opcion;
     do {
-        printf("\n=== MÓDULO FINANZAS ===\n");
+        printf("\n-------- MÓDULO FINANZAS --------\n");
         printf("1. Agregar finanzas\n");
         printf("2. Listar finanzas por RUT\n");
         printf("3. Editar finanzas\n");
@@ -43,6 +43,7 @@ void menuFinanzas(void) {
         printf("5. Volver al menú principal\n");
         printf("Opción: ");
         scanf("%d", &opcion);
+        printf("\n---------------------------------\n");
         limpiar_buffer(); //Evita problemas con fgets tras scanf 
 
         switch (opcion) {
@@ -203,7 +204,8 @@ void editarFinanzas(void) {
     fgets(temp, sizeof(temp), stdin);
     temp[strcspn(temp, "\n")] = 0;
     if (strlen(temp) > 0) {
-        strncpy(finanzas[id].numeroCuenta, temp, 50 - 1);
+        strncpy(finanzas[id].numeroCuenta, temp, sizeof(finanzas[id].numeroCuenta) - 1);
+        finanzas[id].numeroCuenta[sizeof(finanzas[id].numeroCuenta) - 1] = '\0';
         finanzas[id].numeroCuenta[20 - 1] = '\0';
     }
 
