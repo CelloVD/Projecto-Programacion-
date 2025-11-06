@@ -82,7 +82,7 @@ void menuFinanzas(void) {
 
 //Crea un nuevo registro financiero vinculado a un rut existente 
 void agregarFinanzas(void) {
-    if (totalFinanzas >= MAX_REGISTROS) {
+    if (totalFinanzas > MAX_REGISTROS) {
         printf("No se pueden registrar más finanzas (máx. %d).\n", MAX_REGISTROS);
         return;
     }
