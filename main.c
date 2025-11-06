@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include "miembro.h"
-#include "constante.h"
-#include "validaciones.h"
+#include <bloomer.h>
 
 Miembro miembro[MAX_REGISTROS]; 
 int totalMiembro = 0;  
