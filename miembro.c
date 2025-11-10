@@ -1,7 +1,11 @@
 #include <stdio.h> //Entrada/Salida estándar
 #include <string.h> //Manipulación de cadena (strcpy, strcmp, etc....)
+#include <stdlib.h> //strtol() : convierte una cadena en un número entero largo
 #include <ctype.h> //Funciones para caracteres (toupper, etc.....)
-#include "miembro.h" //incluimos la cabecera para acceder a la struct y prototipos
+#include "miembros.h" //incluimos la cabecera para acceder a la struct y prototipos
+#include "finanzas.h"
+#include "vehiculos.h"
+#include "fondosmutuos.h"
 #include "validaciones.h"
 #include "constante.h"
 
@@ -336,19 +340,19 @@ void eliminarMiembro() {
 
     printf("¿Eliminar a %s %s y todos sus datos asociados? (s/n): ",
            miembros[idx].nombre, miembros[idx].apellido);
-    char confirm;
-    scanf("%c", &confirm);
-    limpiar_buffer();
+    char buffer[10];
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = 0;
 
-    if (confirm == 's' || confirm == 'S') {
+    if (buffer[0] == 's' || buffer[0] == 'S'){
         //ELIMINACIÓN EN CASCADA
         eliminarFinanzasPorRut(rut);
         eliminarPropiedadesPorRut(rut);
         eliminarVehiculosPorRut(rut);
-        eliminarTerrenosPorRut(rut);
         eliminarFondosMutuosPorRut(rut);
-        eliminarAgendaPorRut(rut);
-        eliminarBeneficiosPorRut(rut);
+        //eliminarTerrenosPorRut(rut);
+        //eliminarAgendaPorRut(rut);
+        //eliminarBeneficiosPorRut(rut);
 
         // Ahora eliminar al miembro
         for (int i = idx; i < totalMiembros - 1; i++) {
@@ -365,30 +369,41 @@ void eliminarMiembro() {
 int menuMiembro() {
     int opcion, c;
     do {
-        printf("\n------ Módulo Miembros -----\n");
+        char buffer[20];
+        printf("\n--------- MÓDULO MIEMBROS ---------\n");
         printf("1. Crear Miembro\n");
         printf("2. Editar Miembro\n");
         printf("3. Eliminar Miembro\n");
         printf("4. Listar Miembros\n");
         printf("5. Volver al menú principal\n");
-        printf("------------------------------\n");
+        printf("-------------------------------------\n");
         printf("Seleccione una opcion: ");
         
-        if (scanf("%d", &opcion) != 1) {
-            limpiar_buffer();
+        if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
+            printf("Error de entrada. Intente de nuevo.\n");
             opcion = -1;
-        } else {
-            c = getchar();
-            if (c != '\n' && c != EOF) {
-                limpiar_buffer();
-                opcion = -1;
-            } else if (opcion < 1 || opcion > 5) {
-                opcion = -1;
-            }
+            continue;
         }
-
-        limpiar_buffer(); // Asegurar buffer limpio antes de fgets
-
+        // Eliminar el salto de línea
+        buffer[strcspn(buffer, "\n")] = '\0';
+        // Intentar convertir a entero con validación robusta
+        char *end;
+        long val = strtol(buffer, &end, 10);
+        // Saltar espacios al final (si los hay)
+        while (*end && isspace((unsigned char)*end)) {
+            end++;
+        }
+        // Validar que toda la cadena fue consumida y está en rango
+        if (*end == '\0' && val >= 1 && val <= 5) {
+            opcion = (int)val;
+        } else {
+            opcion = -1;
+        }
+        if (opcion == -1) {
+            printf("Opción inválida. Ingrese un número del 1 al 5.\n");
+            continue;
+        }
+        
         switch (opcion) {
             case 1: 
                 crearMiembro(); 
