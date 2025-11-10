@@ -1,19 +1,13 @@
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include "miembro.h"
-#include "constante.h"
-#include "validaciones.h"
-
-Miembro miembro[MAX_REGISTROS]; 
-int totalMiembro = 0;  
+#include "bloomer.h"
 
 //Funcion para entrar a nuestro menu principal del la empresa Bloomer.
 void menuPrincipal(){
+
     int opcion, c;
+    
     do{
         printf("\n------Sistema Bloomer------\n");
-        printf("1. Miembros y menú principal\n");
+        printf("1. Miembros\n");
         printf("2. Finanzas\n");
         printf("3. Propiedades\n");
         printf("4. Vehículos\n");
@@ -25,63 +19,70 @@ void menuPrincipal(){
         printf("----------------------------\n");
         printf("Seleccione una opcion: ");
 
-        //Valida opción
-        if (scanf("%d", &opcion) != 1) {    //Si no es número
-            limpiar_buffer();
+        if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
+            printf("Error de entrada. Intente de nuevo.\n");
             opcion = -1;
-
-        } else {
-            c = getchar(); //Lee siguiente caracter
-
-            if (c != '\n' && c != EOF) {    //Si hay caracter(es) sobrantes
-                limpiar_buffer();
-                opcion = -1;
-
-            } else if (opcion < 0 || opcion > 8) { //Si está fuera del rango
-                opcion = -1;
-            }
+            continue;
         }
-        //Discriminar op
+        // Eliminar el salto de línea
+        buffer[strcspn(buffer, "\n")] = '\0';
+        // Intentar convertir a entero con validación robusta
+        char *end;
+        long val = strtol(buffer, &end, 10);
+        // Saltar espacios al final (si los hay)
+        while (*end && isspace((unsigned char)*end)) {
+            end++;
+        }
+        // Validar que toda la cadena fue consumida y está en rango
+        if (*end == '\0' && val >= 1 && val <= 5) {
+            opcion = (int)val;
+        } else {
+            opcion = -1;
+        }
+        if (opcion == -1) {
+            printf("Opción inválida. Ingrese un número del 1 al 5.\n");
+            continue;
+        }
 
         switch (opcion){
 
         case 1:
-            menuMiembro(miembro, &totalMiembro);
+            menuMiembro();
             printf("Miembros y menu principal:");
             break;
 
         case 2:
-            /* code */
+            menuFinanzas();
             printf("Finanzas \n");
             break;
 
         case 3:
-            /* code */
+            menuPropiedades();
             printf("Propiedades");
             break;
 
         case 4:
-            /* code */
+            menuVehiculos();
             printf("Vehiculos");
             break;
 
         case 5:
-            /* code */
+            menuFondosMutuos();
             printf("Fondos Mutuos");
             break;
 
         case 6:
-            /* code */
+            menuTerrenos();
             printf("Terreno");
             break;
 
         case 7:
-            /* code */
+            menuAgenda();
             printf("Agenda");
             break;
 
         case 8:
-            /* code */
+            menuBeneficios();
             printf("Beneficios");
             break;
 
@@ -95,6 +96,8 @@ void menuPrincipal(){
         }
     }while(opcion != 0);
 }
+
 int main(){
     menuPrincipal();
+    return 0;
 }
