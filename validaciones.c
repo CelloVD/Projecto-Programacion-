@@ -1,7 +1,34 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <limits.h> //INT_MIN: define el valor mínimo para un entero, INT_MAX: define el valor máximo para un entero
 #include "validaciones.h"
+#include "constante.h"
+
+int leerEntero(const char* str, int* valor) {
+    if (!str || *str == '\0') return 0;
+    char* end;
+    long val = strtol(str, &end, 10);
+    // Ignorar espacios al final
+    while (*end && isspace((unsigned char)*end)) end++;
+    if (*end == '\0' && val >= INT_MIN && val <= INT_MAX) {
+        *valor = (int)val;
+        return 1;
+    }
+    return 0;
+}
+
+int leerDouble(const char* str, double* valor) {
+    if (!str || *str == '\0') return 0;
+    char* end;
+    double val = strtod(str, &end);
+    while (*end && isspace((unsigned char)*end)) end++;
+    if (*end == '\0') {
+        *valor = val;
+        return 1;
+    }
+    return 0;
+}
 
 void limpiar_buffer() {
     int c;
@@ -30,28 +57,40 @@ int calcularDV(int rut) {
         return resultado;
 }
 
-//Validar un RUT (ejemplo: "12.345.678-9" o "12345678-9")
-int validarRut(const char* rutCompleto) {
-    int rut;
-    char dvIngresado; //digito verificador 
-    char limpio[20]; //Almacena el rut sin puntos ni espacio
-    int j = 0;
 
-    //Quitar puntos y espacios
-    for (int i = 0; rutCompleto[i] != '\0'; i++) {
+// En validarRut() o en una función auxiliar
+int esRutEnRangoValido(long rutNumerico) {
+    // RUT de personas: 1.000.000 a 30.000.000
+    // RUT de empresas: 50.000.000 a 99.999.999
+    return (rutNumerico >= 1000000 && rutNumerico <= 30000000) ||
+           (rutNumerico >= 50000000 && rutNumerico <= 99999999);
+}
+
+int validarRut(const char* rutCompleto) {
+    if (!rutCompleto) return 0;
+
+    char limpio[20] = {0};
+    int j = 0;
+    for (int i = 0; rutCompleto[i]; i++) {
         if (rutCompleto[i] != '.' && rutCompleto[i] != ' ')
             limpio[j++] = rutCompleto[i];
     }
-    limpio[j] = '\0';
 
-    //Separar número y dígito verificador
-    if (sscanf(limpio, "%d-%c", &rut, &dvIngresado) != 2)
-        return 0; // formato inválido
+    long rut;
+    char dvIngresado;
+    if (sscanf(limpio, "%ld-%c", &rut, &dvIngresado) != 2)
+        return 0;
 
-    dvIngresado = toupper(dvIngresado); //convierte el digito verificar en mayuscula por si es "k"
+    if (rut <= 0) return 0;
 
-    int dvCalculado = calcularDV(rut);
-    char dvCorrecto = (dvCalculado == -1) ? 'K' : dvCalculado + '0';
+    //Validación de rango realista
+    if (!esRutEnRangoValido(rut)) {
+        return 0; // RUT fuera de rango real
+    }
+
+    dvIngresado = toupper((unsigned char)dvIngresado);
+    int dvCalculado = calcularDV((int)rut); // tu función recursiva
+    char dvCorrecto = (dvCalculado == -1) ? 'K' : (char)('0' + dvCalculado);
 
     return dvIngresado == dvCorrecto;
 }
@@ -120,4 +159,21 @@ int validarEmail(const char *email) {
         return 0;
     }
     return 1; // email válido
+}
+
+// Valida formato MM-PP: dos dígitos, guion, uno o más dígitos
+int validarRol(const char* rol) {
+    if (!rol || strlen(rol) < 4 || strlen(rol) > 10) return 0;
+    if (rol[2] != '-') return 0;
+    
+    // Verificar MM: dos dígitos
+    if (!isdigit(rol[0]) || !isdigit(rol[1])) return 0;
+    
+    // Verificar PP: al menos un dígito, todos deben ser dígitos
+    int i = 3;
+    while (rol[i] != '\0') {
+        if (!isdigit(rol[i])) return 0;
+        i++;
+    }
+    return (i > 3); // al menos un dígito después del guion
 }
