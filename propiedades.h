@@ -9,14 +9,14 @@
 
 // Estructura Propiedad
 typedef struct {
-    char rol[MAX_ROL];               
-    int metrosConstruidos;           
-    int anio;                        
-    char torre;                      
-    int numeroDepartamento;          
-    int numeroPiezas;                
-    int numeroBanios;                
-    char rutAsociado[MAX_RUT];       
+    char rol[12];           // Formato: "MM-PP" → máximo 10 chars + '\0'
+    int m2Construidos;
+    int ano;
+    char torre;             // 'A' a 'H'
+    char departamento[15];
+    int numPiezas;
+    int numBanos;
+    char rutAsociado[13];
 } Propiedad;
 
 // Variables globales del módulo
@@ -25,10 +25,10 @@ extern int totalPropiedades;
 
 // Prototipos de funciones
 void menuPropiedades(void);
-void agregarPropiedad(void);
+void agregarPropiedades(void);
 void listarPropiedadesPorRut(const char* rut);
-void editarPropiedad(void);
-void eliminarPropiedad(void);
+void editarPropiedades(void);
+void eliminarPropiedades(void);
 void eliminarPropiedadesPorRut(const char* rut); // para eliminación en cascada
 
-#endif // PROPIEDADES_H
+#endif
