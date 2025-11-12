@@ -14,18 +14,19 @@
 #include "validaciones.h"
 
 //MÓDULO 1: MIEMBROS Y MENÚ PRINCIPAL
-#include "miembro.h"
+#include "miembros.h"
 
 //MÓDULO 2: FINANZAS
 #include "finanzas.h"
-#include "banco.h"
-#include "caja.h"
+#include "bancos.h"
+
 
 //MÓDULO 3: PROPIEDADES
 #include "propiedades.h"
 
 //MÓDULO 4: VEHÍCULOS
-#include "vehiculo.h"
+#include "vehiculos.h"
+#include "autos.h"
 
 //MÓDULO 5: FONDOS MUTUOS
 #include "fondosmutuos.h"
@@ -38,6 +39,6 @@
 
 //MÓDULO 8: BENEFICIOS
 #include "beneficios.h"
-#include "beneficio.h"
+#include "caja.h"
 
 #endif // BLOOMER_H

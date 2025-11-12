@@ -29,10 +29,10 @@ extern int totalVehiculos;
 
 // Prototipos de funciones
 void menuVehiculos(void);
-void agregarVehiculo(void);
+void agregarVehiculos(void);
 void listarVehiculosPorRut(const char* rut);
-void editarVehiculo(void);
-void eliminarVehiculo(void);
+void editarVehiculos(void);
+void eliminarVehiculos(void);
 void eliminarVehiculosPorRut(const char* rut); // para eliminación en cascada
 
 #endif // VEHICULOS_H

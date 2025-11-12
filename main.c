@@ -19,23 +19,30 @@ void menuPrincipal(){
         printf("----------------------------\n");
         printf("Seleccione una opcion: ");
 
-        //Valida opción
-        if (scanf("%d", &opcion) != 1) {    //Si no es número
-            limpiar_buffer();
+        if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
+            printf("Error de entrada. Intente de nuevo.\n");
             opcion = -1;
-
-        } else {
-            c = getchar(); //Lee siguiente caracter
-
-            if (c != '\n' && c != EOF) {    //Si hay caracter(es) sobrantes
-                limpiar_buffer();
-                opcion = -1;
-
-            } else if (opcion < 0 || opcion > 8) { //Si está fuera del rango
-                opcion = -1;
-            }
+            continue;
         }
-        //Discriminar op
+        // Eliminar el salto de línea
+        buffer[strcspn(buffer, "\n")] = '\0';
+        // Intentar convertir a entero con validación robusta
+        char *end;
+        long val = strtol(buffer, &end, 10);
+        // Saltar espacios al final (si los hay)
+        while (*end && isspace((unsigned char)*end)) {
+            end++;
+        }
+        // Validar que toda la cadena fue consumida y está en rango
+        if (*end == '\0' && val >= 1 && val <= 5) {
+            opcion = (int)val;
+        } else {
+            opcion = -1;
+        }
+        if (opcion == -1) {
+            printf("Opción inválida. Ingrese un número del 1 al 5.\n");
+            continue;
+        }
 
         switch (opcion){
 
@@ -50,32 +57,32 @@ void menuPrincipal(){
             break;
 
         case 3:
-            /* code */
+            menuPropiedades();
             printf("Propiedades");
             break;
 
         case 4:
-            /* code */
+            menuVehiculos();
             printf("Vehiculos");
             break;
 
         case 5:
-            /* code */
+            menuFondosMutuos();
             printf("Fondos Mutuos");
             break;
 
         case 6:
-            /* code */
+            menuTerrenos();
             printf("Terreno");
             break;
 
         case 7:
-            /* code */
+            menuAgenda();
             printf("Agenda");
             break;
 
         case 8:
-            /* code */
+            menuBeneficios();
             printf("Beneficios");
             break;
 
