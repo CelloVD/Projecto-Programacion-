@@ -3,6 +3,7 @@
 #include <stdlib.h> //strtol() : convierte una cadena en un número entero largo
 #include <ctype.h> //Funciones para caracteres (toupper, etc.....)
 #include "terrenos.h"
+#include "miembros.h"
 #include "validaciones.h"
 #include "constante.h"
 
