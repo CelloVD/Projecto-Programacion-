@@ -2,7 +2,7 @@
 #include <string.h> //Manipulación de cadena (strcpy, strcmp, etc....)
 #include <stdlib.h> //strtol() : convierte una cadena en un número entero largo
 #include <ctype.h> //Funciones para caracteres (toupper, etc.....)
-#include "fondosmutuos.h"
+#include "fondosMutuos.h"
 #include "validaciones.h"
 #include "constante.h"
 #include "bancos.h"
@@ -139,7 +139,7 @@ void agregarFondosMutuos(void) {
     printf("Tasa: %.2f%% | Proyección anual: $%.0f CLP\n", f.tasaInteres * 100, f.proyeccionAnual);
 }
 
-//Muentra todos los vehiculos de un miembro por su rut 
+//Muentra todos los fondos mutuos de un miembro por su rut 
 void listarFondosMutuos(const char* rut){
     if (!rut) {
         printf("RUT inválido.\n");
@@ -246,7 +246,7 @@ void editarFondosMutuos(){
     printf("Fondo actualizado correctamente.\n");
 }
 
-//Elimina un registro de los vehiculos por patente
+//Elimina un registro de los fondos mutuos por patente
 void eliminarFondosMutuos(){
         if (totalFondosMutuos == 0) {
         printf("No hay fondos mutuos registrados para eliminar.\n");
