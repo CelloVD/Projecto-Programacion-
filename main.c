@@ -3,7 +3,7 @@
 //Funcion para entrar a nuestro menu principal del la empresa Bloomer.
 void menuPrincipal(){
 
-    int opcion;
+    int opcion, c;
     char buffer[20];    
     do{
         printf("\n------Sistema Bloomer------\n");

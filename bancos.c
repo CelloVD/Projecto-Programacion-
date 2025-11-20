@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "banco.h"
+#include "bancos.h"
 
 const char* BANCOS_VALIDOS[NUM_BANCOS] = {
     "Banco de Chile",

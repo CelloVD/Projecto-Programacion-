@@ -28,7 +28,7 @@ extern Vehiculo vehiculos[MAX_REGISTROS];
 extern int totalVehiculos;
 
 // Prototipos de funciones
-void menuVehiculos(void);
+int menuVehiculos(void);
 void agregarVehiculos(void);
 void listarVehiculosPorRut(const char* rut);
 void editarVehiculos(void);

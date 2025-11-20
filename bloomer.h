@@ -18,15 +18,15 @@
 
 //MÓDULO 2: FINANZAS
 #include "finanzas.h"
-#include "banco.h"
+#include "bancos.h"
 
 
 //MÓDULO 3: PROPIEDADES
 #include "propiedades.h"
 
 //MÓDULO 4: VEHÍCULOS
-#include "vehiculo.h"
-#include "auto.h"
+#include "vehiculos.h"
+#include "autos.h"
 
 //MÓDULO 5: FONDOS MUTUOS
 #include "fondosMutuos.h"

@@ -24,7 +24,7 @@ extern Propiedad propiedades[MAX_REGISTROS];
 extern int totalPropiedades;
 
 // Prototipos de funciones
-void menuPropiedades(void);
+int menuPropiedades(void);
 void agregarPropiedades(void);
 void listarPropiedadesPorRut(const char* rut);
 void editarPropiedades(void);

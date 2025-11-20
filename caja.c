@@ -36,7 +36,7 @@ void seleccionarCaja(char destino[], int tam) {
         buffer[strcspn(buffer, "\n")] = '\0';
 
         if (leerEntero(buffer, &opcion) && opcion >= 1 && opcion <= NUM_CAJA) {
-            strncpy(destino, CAJAS_VALIDOS[opcion - 1], tam - 1);
+            strncpy(destino, CAJAS_VALIDAS[opcion - 1], tam - 1);
             destino[tam - 1] = '\0';
             return;
         } else {
